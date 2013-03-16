@@ -76,6 +76,7 @@ def lua_include(package='luajit'):
     cflag_out = cmd_output('pkg-config %s --cflags-only-I' % package)
 
     def trim_i(s):
+        s = str(s)
         if s.startswith('-I'):
             return s[2:]
         return s
