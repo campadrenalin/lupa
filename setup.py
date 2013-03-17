@@ -99,14 +99,14 @@ def find_lua_build(no_luajit=False):
                 if os_path.isfile(libfile):
                     print("found LuaJIT build in %s" % filepath)
                     print("building statically")
-                    return dict(extra_objects=[libfile], include_dirs=[filepath]), None
+                    return dict(extra_objects=[libfile], include_dirs=[str(filepath)]), None
                 # Also check for lua51.lib, which is the Windows equivilant of libluajit.a
                 libfile = os_path.join(filepath, 'lua51.lib')
                 if os_path.isfile(libfile):
                     print("found LuaJIT build in %s" % filepath)
                     print("building statically")
                     # And return the dll file name too, as we need to include it in the install directory
-                    return dict(extra_objects=[libfile], include_dirs=[filepath]), 'lua51.dll'
+                    return dict(extra_objects=[libfile], include_dirs=[str(filepath)]), 'lua51.dll'
     print("No local build of LuaJIT2 found in lupa directory")
 
     # try to find installed LuaJIT2 or Lua
