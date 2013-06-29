@@ -36,6 +36,7 @@ def luajit_build(location):
         'make',
         '-C', location,
         '-j', '4',
+        'CFLAGS=-fPIC',
     ])
 
 def luajit_find(location):
