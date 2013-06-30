@@ -18,10 +18,13 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 def luajit_fetch(location, source):
     import tarfile
-    import urllib
+    try:
+        from urllib import urlretrieve
+    except:
+        from urllib.request import urlretrieve
 
     filename = os.path.join('.', os.path.basename(source))
-    filename, headers = urllib.urlretrieve(source, filename)
+    filename, headers = urlretrieve(source, filename)
 
     tf = tarfile.TarFile.open(filename)
     tf.extractall(location)
