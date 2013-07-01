@@ -52,7 +52,7 @@ def luajit_find_dir(location):
     return [x for x in luajit_find(location) if os.path.isdir(x)]
 
 
-def find_lua_build(no_luajit=False):
+def find_lua_build():
     '''
     Link against local luajit build, fetching and creating if necessary.
     '''
@@ -90,45 +90,15 @@ def has_option(name):
         return True
     return False
 
-ext_args, dll_file = find_lua_build(no_luajit=has_option('--no-luajit'))
-if has_option('--without-assert'):
-    ext_args['define_macros'] = [('CYTHON_WITHOUT_ASSERTIONS', None)]
-
-
-# check if Cython is installed, and use it if requested or necessary
-use_cython = has_option('--with-cython')
-if not use_cython:
-    if not os.path.exists(os.path.join(os.path.dirname(__file__), 'lupa', '_lupa.c')):
-        print("generated sources not available, need Cython to build")
-        use_cython = True
-
-cythonize = None
-if use_cython:
-    try:
-        from Cython.Build import cythonize
-        import Cython.Compiler.Version
-        print("building with Cython " + Cython.Compiler.Version.version)
-        source_extension = ".pyx"
-    except ImportError:
-        print("WARNING: trying to build with Cython, but it is not installed")
-        cythonize = None
-        source_extension = ".c"
-else:
-    print("building without Cython")
-    source_extension = ".c"
-
+ext_args, dll_file = find_lua_build()
 
 ext_modules = [
     Extension(
         'lupa._lupa',
-        sources = ['lupa/_lupa'+source_extension],
+        sources = ['lupa/_lupa.c'],
         **ext_args
         )
     ]
-
-if cythonize is not None:
-    ext_modules = cythonize(ext_modules)
-
 
 def read_file(filename):
     with open(os.path.join(basedir, filename)) as f:
